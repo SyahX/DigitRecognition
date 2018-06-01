@@ -1,0 +1,10 @@
+# Python:
+*.py[cod]
+__pycache__
+
+# bash
+*.sh
+
+# sys
+.DS_Store
+
