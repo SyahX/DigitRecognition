@@ -34,6 +34,15 @@ def random_data(data, batch_size):
 		tmpA = [data[0][x] for x in idx[i: min(i + batch_size, length)]]
 		tmpB = [data[1][x] for x in idx[i: min(i + batch_size, length)]]
 		new_data.append((tmpA, tmpB))
-	print (new_data[0][1])
 	return new_data
+
+def expand(pred):
+	length = len(pred)
+
+	new_pred = []
+	for i in range(length):
+		new_pred.append([0 for x in range(10)])
+		new_pred[-1][pred[i]] = 1
+	return new_pred
+
 
