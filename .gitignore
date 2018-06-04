@@ -8,3 +8,6 @@ __pycache__
 # sys
 .DS_Store
 
+# data
+.csv
+
