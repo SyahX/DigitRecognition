@@ -26,19 +26,40 @@ def test(dNet, input_x, pred_y):
 	correct = pred.eq(pred_y.data.view_as(pred)).sum()
 	return float(correct.tolist()) / float(length) * 100
 
+def only_test(dNet, input_x, result_file):
+	output_x = dNet(input_x)
+	pred = output_x.data.max(1, keepdim=True)[1].tolist()
+	
+	outf = open(result_file, 'w')
+	outf.write('ImageId,Label\n')
+	for idx in range(len(pred)):
+		outf.write("%d,%d\n" % (idx + 1, pred[idx][0]))
+
 def main(args):
+	dNet = net.DigitRecNet()
+	optimizer = optim.SGD(dNet.parameters(), lr=args.lr, momentum=0.5)
+	criterion = torch.nn.NLLLoss()
+	
+	if not args.train:
+		logging.info('-' * 50)
+		logging.info('Start testing ... ')
+		load_model(dNet, args.model_file, 'BestModel')
+		logging.info('finish load model: %s' % args.model_file)
+		test_x = utils.load_test_data(args.test_file, args.N, args.M)
+		logging.info('Load test : %d' % len(test_x))
+		test_input_x = Variable(torch.FloatTensor(test_x))
+		test_input_x = test_input_x.resize(test_input_x.size()[0], 1, args.N, args.M)
+		only_test(dNet, test_input_x, args.result_file)
+		return
+
 	train_x, train_y = utils.load_data(args.train_file, args.N, args.M)
 	dev_x, dev_y = utils.load_data(args.dev_file, args.N, args.M)
 	logging.info('-' * 50)
 	logging.info('Load train : %d, Load dev : %d' % (len(train_x), len(dev_x)))
 
-	dNet = net.DigitRecNet()
-	optimizer = optim.SGD(dNet.parameters(), lr=args.lr, momentum=0.5)
-	criterion = torch.nn.NLLLoss()
-
 	#train
 	logging.info('-' * 50)
-	logging.info('Start train ... ')
+	logging.info('Start training ... ')
 
 	dev_input_x = Variable(torch.FloatTensor(dev_x))
 	dev_input_x = dev_input_x.resize(dev_input_x.size()[0], 1, args.N, args.M)

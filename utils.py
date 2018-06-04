@@ -24,6 +24,14 @@ def load_data(input_file, N, M):
 		Labels.append(int(data[0]));
 	return Images, Labels
 
+def load_test_data(input_file, N, M):
+	inf = open(input_file, 'r')
+	Images = []
+	for line in inf:
+		data = line[:-1].split(',')
+		Images.append(load_image(data[0:], N, M))
+	return Images
+
 def random_data(data, batch_size):
 	length = len(data[0])
 	idx = [x for x in range(length)]

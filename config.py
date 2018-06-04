@@ -32,6 +32,16 @@ def get_args():
 						default='../data/dev.csv',
 						help='path of dev file')
 
+	parser.add_argument('-test_file',
+			            type=str,
+						default='../data/test.csv',
+						help='path of test file')
+
+	parser.add_argument('-result_file',
+			            type=str,
+						default='./result.csv',
+						help='path of result file')
+
 	parser.add_argument('-model_file',
 			            type=str,
 						default='../obj/S',
